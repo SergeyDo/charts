@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: webapp
+  name: webapp-{{ .image.version }}
   labels:
     tier: frontend
     heritage: helm
@@ -10,14 +10,16 @@ spec:
   replicas: 2
   selector:
     tier: frontend
+    version: {{ .image.version }}
   template:
     metadata:
       labels:
         tier: frontend
         heritage: helm 
+        version: {{ .image.version }}
     spec:
       containers:
-      - name: webapp
+      - name: webapp-{{ .image.version }}
         imagePullPolicy: Always
         image: {{ .image.name }}
         ports:
