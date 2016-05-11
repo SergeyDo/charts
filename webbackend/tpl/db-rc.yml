@@ -1,0 +1,33 @@
+#helm:generate helm template -o $HELM_GENERATE_DIR/manifests/db-rc.yaml -d $HELM_GENERATE_DIR/tpl/values.toml $HELM_GENERATE_DIR/tpl/db-rc.yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: db-{{ .image.version }}
+  labels:
+    tier: webbackend
+    heritage: helm
+    template: webbackend
+spec:
+  replicas: 1
+  selector:
+    tier: webbackend
+    version: {{ .image.version }}
+  template:
+    metadata:
+      labels:
+        tier: frontend
+        heritage: helm
+        version: {{ .image.version }}
+    spec:
+      containers:
+        - name: webapp-{{ .image.version }}
+          imagePullPolicy: IfNotPresent
+          image: postgres
+          ports:
+            - name: dbport
+              containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: admin
+            - name: POSTGRES_USER
+              value: admin
