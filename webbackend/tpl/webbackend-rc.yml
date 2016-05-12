@@ -1,8 +1,8 @@
-#helm:generate helm tpl -d tpl/values.toml --out $HELM_GENERATE_DIR/manifests/app-rc.yml $HELM_GENERATE_DIR/tpl/app-rc.yml
+#helm:generate helm tpl -d tpl/values.toml --out $HELM_GENERATE_DIR/manifests/webbackend-rc.yml $HELM_GENERATE_DIR/tpl/webbackend-rc.yml
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: app-{{ .app.version }}
+  name: webbackend-{{ .webbackend.version }}
   labels:
     tier: webbackend
     heritage: helm
@@ -11,18 +11,18 @@ spec:
   replicas: 2
   selector:
     tier: webbackend
-    version: {{ .app.version }}
+    version: {{ .webbackend.version }}
   template:
     metadata:
       labels:
         tier: webbackend
         heritage: helm 
-        version: {{ .app.version }}
+        version: {{ .webbackend.version }}
     spec:
       containers:
-      - name: app-{{ .app.version }}
+      - name: webbackend-{{ .webbackend.version }}
         imagePullPolicy: Always
-        image: {{ .app.image }}
+        image: {{ .webbackend.image }}
         ports:
         - name: nodeport
           containerPort: 3333
