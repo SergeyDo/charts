@@ -1,2 +1,6 @@
-[image]
-version = v1
+[app]
+image = "user/webbackend"
+version = "v1"
+
+[db]
+version = "v1"

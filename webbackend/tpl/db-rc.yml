@@ -1,8 +1,8 @@
-#helm:generate helm template -o $HELM_GENERATE_DIR/manifests/db-rc.yaml -d $HELM_GENERATE_DIR/tpl/values.toml $HELM_GENERATE_DIR/tpl/db-rc.yaml
+#helm:generate helm template -o $HELM_GENERATE_DIR/manifests/db-rc.yml -d $HELM_GENERATE_DIR/tpl/values.toml $HELM_GENERATE_DIR/tpl/db-rc.yml
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: db-{{ .image.version }}
+  name: db-{{ .db.version }}
   labels:
     tier: webbackend
     heritage: helm
@@ -11,16 +11,16 @@ spec:
   replicas: 1
   selector:
     tier: webbackend
-    version: {{ .image.version }}
+    version: {{ .db.version }}
   template:
     metadata:
       labels:
-        tier: frontend
+        tier: webbackend
         heritage: helm
-        version: {{ .image.version }}
+        version: {{ .db.version }}
     spec:
       containers:
-        - name: webapp-{{ .image.version }}
+        - name: webapp-{{ .db.version }}
           imagePullPolicy: IfNotPresent
           image: postgres
           ports:
